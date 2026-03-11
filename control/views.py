@@ -80,13 +80,14 @@ def EquipamentosView(request):
         worksheet.title = 'Equipamentos'
 
         # Cabeçalho da planilha
-        columns = ['Equipamento', 'Tipo', 'Unidade','Valor', 'Status', 'Ativo']
+        columns = ['Equipamento','Classe', 'Tipo', 'Unidade','Valor', 'Status', 'Ativo']
         worksheet.append(columns)
 
         # Inserindo os dados filtrados
         for equipamento in equipamentos:
             worksheet.append([
                 equipamento.nome,
+                equipamento.tipo.classe.nome if equipamento.tipo and equipamento.tipo.classe else '',
                 equipamento.tipo.nome if equipamento.tipo else '',
                 equipamento.unidade.nome if equipamento.unidade else '',
                 equipamento.valor if equipamento.valor else 0.00,

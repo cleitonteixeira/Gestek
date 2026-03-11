@@ -60,7 +60,7 @@
         {% for equipamento in page_obj %}
         <tr>
             <td class="align-middle fw-bold">{{ equipamento.nome }}</td>
-            <td class="align-middle">{{ equipamento.get_classe_display }}</td>
+            <td class="align-middle">{{ equipamento.tipo.classe.nome }}</td>
             <td class="align-middle">{{ equipamento.tipo.nome }}</td>
             <td class="align-middle">
                 <span class="text-muted"><i class="fas fa-map-marker-alt me-1"></i>{{ equipamento.unidade.nome }}</span>
@@ -102,7 +102,11 @@
     <div class="text-muted small">
         Mostrando {{ page_obj.start_index }} - {{ page_obj.end_index }} de {{ page_obj.paginator.count }} equipamentos
     </div>
-
+    <form method="get">
+            <button type="submit" name="exportar" value="xlsx" class="btn btn-success btn-sm">
+                <i class="fas fa-file-excel"></i> Exportar
+            </button>
+    </form>
     <nav aria-label="Navegação de páginas">
         <ul class="pagination pagination-sm mb-0">
             

@@ -4,78 +4,156 @@
 <div class="row justify-content-center mt-4">
     <div class="col-md-12 card p-4 shadow-sm">
         <h3 class="mb-4 border-bottom pb-2">Editando: {{ equipamento.nome }}</h3>
-        <form method="post" class="row g-3">
-            {% csrf_token %}
-            <div class="col-12">
-                <div class="form-floating mb-3">
-                    {{ form.nome }}
-                    <label for="{{ form.nome.id_for_label }}">{{ form.nome.label }}</label>
-                    {% if form.nome.errors %}
-                        <div class="text-danger small mt-1">{{ form.nome.errors }}</div>
-                    {% endif %}
+        
+            <form method="post" class="row g-3">
+                {% csrf_token %}
+                <div class="col-12">
+                    <div class="form-floating mb-3">
+                        {{ form.nome }}
+                        <label for="{{ form.nome.id_for_label }}">{{ form.nome.label }}</label>
+                        {% if form.nome.errors %}
+                            <div class="text-danger small mt-1">{{ form.nome.errors }}</div>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="col-4">
-                <div class="form-floating mb-3">
-                    {{ form.unidade }}
-                    <label for="{{ form.unidade.id_for_label }}">{{ form.unidade.label }}</label>
-                    {% if form.unidade.errors %}
-                        <div class="text-danger small mt-1">{{ form.unidade.errors }}</div>
-                    {% endif %}
+                <div class="col-4">
+                    <div class="form-floating mb-3">
+                        {{ form.classe }}
+                        <label for="{{ form.classe.id_for_label }}">{{ form.classe.label }}</label>
+                        {% if form.classe.errors %}
+                            <div class="text-danger small mt-1">{{ form.classe.errors }}</div>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="col-4">
-                <div class="form-floating mb-3">
-                    {{ form.tipo }}
-                    <label for="{{ form.tipo.id_for_label }}">{{ form.tipo.label }}</label>
-                    {% if form.tipo.errors %}
-                        <div class="text-danger small mt-1">{{ form.tipo.errors }}</div>
-                    {% endif %}
+                <div class="col-4">
+                    <div class="form-floating mb-3">
+                        {{ form.tipo }}
+                        <label for="{{ form.tipo.id_for_label }}">{{ form.tipo.label }}</label>
+                        {% if form.tipo.errors %}
+                            <div class="text-danger small mt-1">{{ form.tipo.errors }}</div>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="col-4">
-                <div class="form-floating mb-3">
-                    {{ form.status }}
-                    <label for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
-                    {% if form.status.errors %}
-                        <div class="text-danger small mt-1">{{ form.status.errors }}</div>
-                    {% endif %}
+                <div class="col-4">
+                    <div class="form-floating mb-3">
+                        {{ form.status }}
+                        <label for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
+                        {% if form.status.errors %}
+                            <div class="text-danger small mt-1">{{ form.status.errors }}</div>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="col-4">
-                <div class="form-floating mb-3">
-                    {{ form.valor }}
-                    <label for="{{ form.valor.id_for_label }}">{{ form.valor.label }}</label>
-                    {% if form.valor.errors %}
-                        <div class="text-danger small mt-1">{{ form.valor.errors }}</div>
-                    {% endif %}
+                <div class="col-md-3">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-light text-muted fw-bold">R$</span>
+                        
+                        <div class="form-floating {% if form.valor.errors %}is-invalid{% endif %}">
+                            {{ form.valor }}
+                            <label for="{{ form.valor.id_for_label }}">{{ form.valor.label }}</label>
+                        </div>
+
+                        {% if form.valor.errors %}
+                            <div class="invalid-feedback d-block mt-1">
+                                {{ form.valor.errors|first }}
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="col-8">
-                <div class="form-floating mb-3">
-                    {{ form.responsavel }}
-                    <label for="{{ form.responsavel.id_for_label }}">{{ form.responsavel.label }}</label>
-                    {% if form.responsavel.errors %}
-                        <div class="text-danger small mt-1">{{ form.responsavel.errors }}</div>
-                    {% endif %}
+                <div class="col-3">
+                    <div class="form-floating mb-3">
+                        {{ form.unidade }}
+                        <label for="{{ form.unidade.id_for_label }}">{{ form.unidade.label }}</label>
+                        {% if form.unidade.errors %}
+                            <div class="text-danger small mt-1">{{ form.unidade.errors }}</div>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="col-12">
-                <div class="form-check mb-1">
-                    {{ form.ativo }}
-                    <label class="form-check-label fw-bold" for="{{ form.ativo.id_for_label }}">
-                        {{ form.ativo.label }}
-                    </label>
-                    {% if form.ativo.errors %}
-                        <div class="text-danger small">{{ form.ativo.errors }}</div>
-                    {% endif %}
+                <div class="col-6">
+                    <div class="form-floating mb-3">
+                        {{ form.responsavel }}
+                        <label for="{{ form.responsavel.id_for_label }}">{{ form.responsavel.label }}</label>
+                        {% if form.responsavel.errors %}
+                            <div class="text-danger small mt-1">{{ form.responsavel.errors }}</div>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="d-flex gap-2">
-                <a href="{% url 'control:equipamentos' %}" class="btn btn-outline-secondary me-md-2">Voltar</a>
-                <button type="submit" class="btn btn-success">Salvar Alterações</button>
-            </div>
-        </form>
+                <div class="col-12">
+                    <div class="form-check mb-1">
+                        {{ form.ativo }}
+                        <label class="form-check-label fw-bold" for="{{ form.ativo.id_for_label }}">
+                            {{ form.ativo.label }}
+                        </label>
+                        {% if form.ativo.errors %}
+                            <div class="text-danger small">{{ form.ativo.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Salvar Equipamento</button>
+                    <a href="{% url 'control:equipamentos' %}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+<script>
+    // DOMContentLoaded garante que o script só roda depois que o HTML (e os valores do Django) carregaram
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputValor = document.getElementById('id_valor');
+        
+        // Se por algum motivo o campo não existir na tela, aborta para não dar erro
+        if (!inputValor) return;
+
+        // 1. A função que cria a máscara
+        function aplicaMascara(e) {
+            let value = e.target.value;
+            value = value.replace(/\D/g, ""); // Remove tudo o que não é dígito
+            value = (value / 100).toFixed(2) + ""; // Divide por 100 e fixa 2 casas
+            value = value.replace(".", ","); // Troca ponto por vírgula
+            value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1."); // Adiciona o ponto de milhar
+            e.target.value = value;
+        }
+
+        // 2. Adiciona o evento para formatar enquanto o usuário digita
+        inputValor.addEventListener('input', aplicaMascara);
+
+        // 3. TRATAMENTO DO VALOR VINDO DO BANCO DE DADOS
+        if (inputValor.value) {
+            // Verifica se o valor não tem vírgula (ou seja, veio do banco como 1250.00)
+            if (!inputValor.value.includes(',')) {
+                let valorFloat = parseFloat(inputValor.value);
+                if (!isNaN(valorFloat)) {
+                    // Multiplica por 100 (ex: 1250.50 vira 125050) e remove os decimais
+                    inputValor.value = (valorFloat * 100).toFixed(0); 
+                }
+            }
+            // Dispara o evento de input para a máscara fazer a formatação visual
+            inputValor.dispatchEvent(new Event('input'));
+        }
+
+        // 4. Limpeza antes de enviar o formulário para o Django salvar corretamente
+        document.querySelector('form').addEventListener('submit', function() {
+            let rawValue = inputValor.value;
+            // Tira os pontos de milhar e troca a vírgula por ponto (ex: 1.250,50 -> 1250.50)
+            let cleanValue = rawValue.replace(/\./g, '').replace(',', '.');
+            inputValor.value = cleanValue;
+        });
+    });
+</script>
+<script>
+    document.getElementById('id_classe').addEventListener('change', function() {
+        const classeId = this.value;
+        const url = "{% url 'control:ajax_load_tipos' %}";
+        const tipoSelect = document.getElementById('id_tipo');
+
+        fetch(`${url}?classe_id=${classeId}`)
+            .then(response => response.json())
+            .then(data => {
+                tipoSelect.innerHTML = '<option value="">Selecione o Tipo</option>';
+                data.forEach(item => {
+                    tipoSelect.innerHTML += `<option value="${item.id}">${item.nome}</option>`;
+                });
+            });
+    });
+</script>
 {% endblock %}

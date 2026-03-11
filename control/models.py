@@ -54,10 +54,10 @@ class TipoEquipamento(Base):
     class Meta:
         verbose_name = "Tipo de Equipamento"
         verbose_name_plural = "Tipos de Equipamento"
-        ordering = ['nome']
+        ordering = ['classe', 'nome']
 
     def __str__(self):
-        return self.nome
+        return f"{self.classe.nome} - {self.nome}"  
 
 class Equipamento(Base):
     STATUS_CHOICES = [

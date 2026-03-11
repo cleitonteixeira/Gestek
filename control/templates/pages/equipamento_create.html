@@ -98,6 +98,50 @@
     </div>
 </div>
 <script>
+    // DOMContentLoaded garante que o script só roda depois que o HTML (e os valores do Django) carregaram
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputValor = document.getElementById('id_valor');
+        
+        // Se por algum motivo o campo não existir na tela, aborta para não dar erro
+        if (!inputValor) return;
+
+        // 1. A função que cria a máscara
+        function aplicaMascara(e) {
+            let value = e.target.value;
+            value = value.replace(/\D/g, ""); // Remove tudo o que não é dígito
+            value = (value / 100).toFixed(2) + ""; // Divide por 100 e fixa 2 casas
+            value = value.replace(".", ","); // Troca ponto por vírgula
+            value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1."); // Adiciona o ponto de milhar
+            e.target.value = value;
+        }
+
+        // 2. Adiciona o evento para formatar enquanto o usuário digita
+        inputValor.addEventListener('input', aplicaMascara);
+
+        // 3. TRATAMENTO DO VALOR VINDO DO BANCO DE DADOS
+        if (inputValor.value) {
+            // Verifica se o valor não tem vírgula (ou seja, veio do banco como 1250.00)
+            if (!inputValor.value.includes(',')) {
+                let valorFloat = parseFloat(inputValor.value);
+                if (!isNaN(valorFloat)) {
+                    // Multiplica por 100 (ex: 1250.50 vira 125050) e remove os decimais
+                    inputValor.value = (valorFloat * 100).toFixed(0); 
+                }
+            }
+            // Dispara o evento de input para a máscara fazer a formatação visual
+            inputValor.dispatchEvent(new Event('input'));
+        }
+
+        // 4. Limpeza antes de enviar o formulário para o Django salvar corretamente
+        document.querySelector('form').addEventListener('submit', function() {
+            let rawValue = inputValor.value;
+            // Tira os pontos de milhar e troca a vírgula por ponto (ex: 1.250,50 -> 1250.50)
+            let cleanValue = rawValue.replace(/\./g, '').replace(',', '.');
+            inputValor.value = cleanValue;
+        });
+    });
+</script>
+<script>
     document.getElementById('id_classe').addEventListener('change', function() {
         const classeId = this.value;
         const url = "{% url 'control:ajax_load_tipos' %}";

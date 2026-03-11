@@ -67,9 +67,8 @@ class EquipamentoForm(forms.ModelForm):
             'nome': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: Liquidificador Industrial'}),
             'unidade': forms.Select(attrs={'class': 'form-select'}),
             'tipo': forms.Select(attrs={'class': 'form-select'}),
-            'valor': forms.NumberInput(attrs={
-                'class': 'form-control', 
-                'step': '0.01',
+            'valor': forms.TextInput(attrs={
+                'class': 'form-control',
                 'placeholder': '0.00'
             }),
             'responsavel': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: João da Silva'}),
