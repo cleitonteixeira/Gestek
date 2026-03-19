@@ -22,7 +22,7 @@ def LoginView(request):
             )
             if user is not None:
                 login(request, user)
-                return redirect('customer:index')
+                return redirect('control:index')
         else:
             for field_label, errors in form.errors.items():
                 for error in errors:
