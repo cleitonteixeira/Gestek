@@ -8,9 +8,28 @@ from django.db.models import Count, Q
 
 import openpyxl
 
-from .forms import EquipamentoForm, TransferenciaEquipamentoForm, UnidadeForm
+from .forms import EquipamentoForm, TransferenciaEquipamentoForm, UnidadeForm, LoginForm
 
 from .models import Equipamento, HistoricoTransferencia, TipoEquipamento, Unidade
+
+def LoginView(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = authenticate(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password']
+            )
+            if user is not None:
+                login(request, user)
+                return redirect('customer:index')
+        else:
+            for field_label, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'Erro! {error}')
+    else:
+        form = LoginForm()
+    return render(request, 'global/login.html', {'form': form})
 
 @login_required
 def home(request):

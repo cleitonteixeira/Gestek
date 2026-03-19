@@ -15,4 +15,5 @@ urlpatterns = [
     path('equipamento/<int:pk>/transferir/', views.transferir_equipamento, name='transferir_equipamento'),
     path('equipamento/<int:pk>/editar/', views.editar_equipamento, name='editar_equipamento'),
     path('equipamento/load-tipos/', views.load_tipos, name='ajax_load_tipos'),
+    path('login/', views.LoginView, name="login")
 ]
