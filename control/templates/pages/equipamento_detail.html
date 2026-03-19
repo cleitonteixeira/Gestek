@@ -7,11 +7,27 @@
     <div class="col-md-5">
         <div class="card shadow-sm border-0 mb-4 h-100">
             <div class="card-body">
-                <h4 class="fw-bold text-dark mb-1">{{ equipamento.nome }}</h4>
-                <span class="badge {% if equipamento.status == 'ocioso' %}bg-warning text-dark{% elif equipamento.status == 'uso' %}bg-success{% else %}bg-danger{% endif %} mb-4">
-                    {{ equipamento.get_status_display }}
-                </span>
 
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h4 class="fw-bold text-dark mb-1">{{ equipamento.nome }}</h4>
+                        <span class="badge {% if equipamento.status == 'manutencao' %}bg-danger{% elif equipamento.status == 'ocioso' %}bg-warning{% else %}bg-success{% endif %}">
+                            {{ equipamento.get_status_display }}
+                        </span>
+                    </div>
+                    
+                    <div class="btn-group shadow-sm">
+                        <a href="{% url 'control:editar_equipamento' equipamento.pk %}" class="btn btn-warning btn-sm border text-black" title="Manutenção">
+                            <i class="fas fa-tools"></i>
+                        </a>
+                        <a href="{% url 'control:editar_equipamento' equipamento.pk %}" class="btn btn-white btn-sm border text-secondary" title="Editar Cadastro">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'control:transferir_equipamento' equipamento.pk %}" class="btn btn-primary btn-sm" title="Transferir Equipamento">
+                            <i class="fas fa-exchange-alt"></i>
+                        </a>
+                    </div>
+                </div>
                 <div class="row g-3">
                     <div class="col-6">
                         <small class="text-muted d-block" style="font-size: 0.75rem; text-transform: uppercase;">Classe</small>
@@ -54,7 +70,7 @@
             <div class="card-body pt-0">
                 
                 <div class="timeline-compact">
-                    {% for log in equipamento.historico_transferencias.all %}
+                    {% for log in historico_transferencias %}
                     <div class="timeline-item-compact">
                         <div class="timeline-dot"></div>
                         

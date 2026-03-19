@@ -95,3 +95,11 @@ class TransferenciaEquipamentoForm(forms.ModelForm):
             'unidade': forms.Select(attrs={'class': 'form-select'}),
             'responsavel': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Responsável'}),
         }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance and self.instance.unidade:
+            self.fields['unidade'].queryset = self.fields['unidade'].queryset.exclude(
+                pk=self.instance.unidade.pk
+            )

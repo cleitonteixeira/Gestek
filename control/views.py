@@ -29,13 +29,9 @@ def home(request):
 @login_required
 def UnidadesView(request):
     unidades_list = Unidade.objects.all().order_by('codigo')
-    
-    # Filtro de busca (opcional, mas recomendado)
     busca = request.GET.get('search')
     if busca:
         unidades_list = unidades_list.filter(nome__icontains=busca)
-
-    # Define 12 unidades por página (ideal para o grid de 4 colunas no PC)
     paginator = Paginator(unidades_list, 10) 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -86,16 +82,11 @@ def EquipamentosView(request):
     if request.GET.get('exportar') == 'xlsx':
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="relatorio_equipamentos.xlsx"'
-
         workbook = openpyxl.Workbook()
         worksheet = workbook.active
         worksheet.title = 'Equipamentos'
-
-        # Cabeçalho da planilha
         columns = ['Equipamento','Classe', 'Tipo', 'Unidade','Valor', 'Status', 'Ativo']
         worksheet.append(columns)
-
-        # Inserindo os dados filtrados
         for equipamento in equipamentos:
             worksheet.append([
                 equipamento.nome,
@@ -112,8 +103,6 @@ def EquipamentosView(request):
     paginator = Paginator(equipamentos, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-
-    # Contexto para popular os selects do filtro
     unidades = Unidade.objects.all()
     tipos = TipoEquipamento.objects.all()
 
@@ -146,7 +135,7 @@ def editar_equipamento(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, f'{equipamento.nome} atualizado com sucesso!')
-            return redirect('control:equipamentos')
+            return redirect('control:detalhes_equipamento', pk=equipamento.pk)
     else:
         form = EquipamentoForm(instance=equipamento)
     return render(request, 'pages/equipamento_edit.html', {'form': form, 'equipamento': equipamento})
@@ -154,7 +143,6 @@ def editar_equipamento(request, pk):
 @login_required
 def transferir_equipamento(request, pk):
     equipamento = get_object_or_404(Equipamento, pk=pk)
-    # Guarda os valores ANTIGOS antes de qualquer alteração
     unidade_antiga = equipamento.unidade
     responsavel_antigo = equipamento.responsavel
 
@@ -162,13 +150,8 @@ def transferir_equipamento(request, pk):
         form = TransferenciaEquipamentoForm(request.POST, instance=equipamento)
         
         if form.is_valid():
-            # Salva o equipamento com a nova unidade e responsável
             equipamento_atualizado = form.save()
-            
-            # Pega o motivo digitado no form
             motivo_texto = form.cleaned_data['motivo']
-            
-            # Cria o registro no Histórico!
             HistoricoTransferencia.objects.create(
                 equipamento=equipamento_atualizado,
                 unidade_origem=unidade_antiga,
@@ -176,19 +159,17 @@ def transferir_equipamento(request, pk):
                 responsavel_origem=responsavel_antigo,
                 responsavel_destino=equipamento_atualizado.responsavel,
                 motivo=motivo_texto,
-                usuario=request.user # Registra o usuário logado
+                usuario=request.user
             )
-            
             messages.success(request, f'{equipamento.nome} transferido com sucesso!')
-            return redirect('control:equipamentos')
+            return redirect('control:detalhes_equipamento', pk=equipamento.pk)
     else:
         form = TransferenciaEquipamentoForm(instance=equipamento)
-        
     return render(request, 'pages/equipamento_transfer.html', {'form': form, 'equipamento': equipamento})
 
 def detalhes_equipamento(request, pk):
     equipamento = get_object_or_404(Equipamento, pk=pk)
-    historico_transferencias = HistoricoTransferencia.objects.filter(equipamento=equipamento).select_related('unidade_origem', 'unidade_destino', 'usuario')
+    historico_transferencias = HistoricoTransferencia.objects.filter(equipamento=equipamento).select_related('unidade_origem', 'unidade_destino', 'usuario')[:3]
     return render(request, 'pages/equipamento_detail.html', {'equipamento': equipamento, 'historico_transferencias': historico_transferencias})
 
 def load_tipos(request):
