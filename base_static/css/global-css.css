@@ -2,10 +2,6 @@
     padding: 0;
     margin: 0;
 }
-body {
-    background: #1e1e2f;
-    color: #e4e6eb;
-}
 .row > .col-3 {
     padding-right: 0;
   }
@@ -39,4 +35,100 @@ body {
     border-radius: 50%;
     background-color: #0d6efd; /* Cor azul do Bootstrap */
     border: 2px solid #fff;
+}
+
+/* =========================================
+   SOBRESCREVENDO PADRÕES DO BOOTSTRAP
+   ========================================= */
+
+/* 1. Cards mais modernos (caso prefira fazer via CSS em vez do HTML) */
+.card {
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 2. Soft Badges (Corrige o contraste e deixa o visual Premium) */
+.badge {
+    font-weight: 500;
+    padding: 0.55em 0.9em;
+    letter-spacing: 0.3px;
+}
+
+/* Ocioso (Amarelo) */
+.badge-warning, .bg-warning {
+    background-color: #fffbeb !important;
+    color: #b45309 !important; /* Texto escuro em fundo claro */
+    border: 1px solid #fde68a;
+}
+
+/* Em Uso / Ativo (Verde) */
+.badge-success, .bg-success {
+    background-color: #ecfdf5 !important;
+    color: #047857 !important;
+    border: 1px solid #a7f3d0;
+}
+
+/* Manutenção (Vermelho) */
+.badge-danger, .bg-danger {
+    background-color: #fef2f2 !important;
+    color: #b91c1c !important;
+    border: 1px solid #fecaca;
+}
+
+/* Números azuis (Painel de controle) */
+.badge-primary, .bg-primary {
+    background-color: #eff6ff !important;
+    color: #1d4ed8 !important;
+    border: 1px solid #bfdbfe;
+}
+
+/* 3. Estilização refinada para a Tabela do Bootstrap */
+.table thead th {
+    background-color: #f8fafc;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid #e2e8f0 !important;
+    border-top: none !important;
+}
+
+.table tbody td {
+    color: #334155;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f5f9;
+}
+body {
+    /* Um cinza azulado bem leve, padrão de sistemas modernos */
+    background-color: #f0f2f5 !important; 
+    color: #334155;
+}
+
+/* 2. Ajuste do Header (Painel Superior) */
+/* Se você quiser que o topo também seja mais suave em vez de preto total */
+.navbar, .header-top, .bg-dark {
+    background-color: #1e293b !important; /* Um azul marinho profundo em vez de preto */
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* 3. Refinando os Cards para "flutuarem" no novo fundo */
+.card, .painel-branco, .table-container {
+    background-color: #ffffff !important;
+    border: none !important;
+    /* Adiciona uma sombra sutil para dar profundidade */
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    border-radius: 8px !important;
+    margin-bottom: 1.5rem;
+}
+/* 5. Inputs e Forms */
+.form-control, .form-select {
+    border: 1px solid #d1d5db !important;
+    background-color: #ffffff !important;
+}
+
+.form-control:focus {
+    background-color: #ffffff !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25) !important;
 }
