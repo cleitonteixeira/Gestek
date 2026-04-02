@@ -104,3 +104,29 @@ class HistoricoTransferencia(models.Model):
         if self.usuario:
             return self.usuario.get_full_name() or self.usuario.username
         return "Sistema/Removido"
+    
+class Manutencao(Base):
+    TIPO_CHOICES = [
+        ('Preventiva', 'Preventiva'),
+        ('Corretiva', 'Corretiva'),
+    ]
+    STATUS_CHOICES = [
+        ('Agendada', 'Agendada'),
+        ('Em Execução', 'Em Execução'),
+        ('Concluída', 'Concluída'),
+    ]
+
+    equipamento = models.ForeignKey(Equipamento, on_delete=models.CASCADE, related_name='manutencoes')
+    data_manutencao = models.DateField("Data")
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
+    descricao = models.TextField("O que foi feito")
+    prestador = models.CharField("Técnico/Empresa", max_length=255)
+    valor = models.DecimalField("Custo (R$)", max_digits=10, decimal_places=2, default=0)
+    proxima_manutencao = models.DateField("Próxima Revisão", null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Concluída')
+
+    class Meta:
+        ordering = ['-data_manutencao']
+
+    def __str__(self):
+        return f"{self.equipamento.nome} - {self.data_manutencao}"

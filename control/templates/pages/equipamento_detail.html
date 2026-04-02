@@ -2,8 +2,25 @@
 {% block sub_page_title %}Equipamento{% endblock sub_page_title %}
 {% block sub_content %}
 {% load l10n %}
-
-<div class="row mt-4">
+<div class="row g-3 mb-1">
+    <div class="col-md-6">
+        <div class="card bg-primary text-white shadow-sm">
+            <div class="card-body py-2">
+                <small class="opacity-75">Investimento em Manutenção</small>
+                <h4 class="mb-0">R$ {{ custo_total_manutencao|floatformat:2 }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-primary text-white shadow-sm">
+            <div class="card-body py-2">
+                <small class="opacity-75">Valor Total Acumulado (Ativo + Gastos)</small>
+                <h4 class="mb-0">R$ {{ custo_total_ativo|floatformat:2 }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-1">
     <div class="col-md-5">
         <div class="card shadow-sm border-0 mb-4 h-100">
             <div class="card-body">
@@ -17,9 +34,6 @@
                     </div>
                     
                     <div class="btn-group shadow-sm">
-                        <a href="{% url 'control:editar_equipamento' equipamento.pk %}" class="btn btn-warning btn-sm border text-black" title="Manutenção">
-                            <i class="fas fa-tools"></i>
-                        </a>
                         <a href="{% url 'control:editar_equipamento' equipamento.pk %}" class="btn btn-white btn-sm border text-secondary" title="Editar Cadastro">
                             <i class="fas fa-edit"></i>
                         </a>
@@ -63,52 +77,166 @@
     </div>
 
     <div class="col-md-7">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-header bg-white py-3 border-bottom-0">
-                <h5 class="mb-0 fw-bold"><i class="fas fa-history text-primary me-2"></i>Histórico de Movimentações</h5>
+        <div class="card shadow-sm border-0 mt-1">
+            <div class="card-header bg-white pt-3">
+                <ul class="nav nav-tabs card-header-tabs" id="historicoTabs" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link active fw-bold" id="movimentacao-tab" data-bs-toggle="tab" data-bs-target="#movimentacao" type="button" role="tab">
+                            <i class="fas fa-exchange-alt me-2"></i>Movimentações
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link fw-bold" id="manutencao-tab" data-bs-toggle="tab" data-bs-target="#manutencao" type="button" role="tab">
+                            <i class="fas fa-tools me-2"></i>Manutenções 
+                            <span class="badge bg-secondary ms-1">{{ equipamento.manutencoes.count }}</span>
+                        </button>
+                    </li>
+                </ul>
             </div>
-            <div class="card-body pt-0">
-                
-                <div class="timeline-compact">
-                    {% for log in historico_transferencias %}
-                    <div class="timeline-item-compact">
-                        <div class="timeline-dot"></div>
-                        
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="small text-muted fw-semibold" style="font-size: 0.8rem;">
-                                <i class="fa fa-calendar-alt me-1"></i>{{ log.data_transferencia|date:"d/m/Y H:i" }}
-                            </span>
-                            <small class="text-muted" style="font-size: 0.8rem;">
-                                <i class="fas fa-user-edit me-1"></i>{{ log.usuario.get_full_name|default:log.usuario.username }}
-                            </small>
-                        </div>
-                        
-                        <div class="bg-light border rounded p-2 mb-1 shadow-sm">
-                            <div class="d-flex align-items-center gap-2 flex-wrap" style="font-size: 0.9rem;">
-                                <span class="text-secondary">{{ log.unidade_origem.nome|default:"Estoque" }}</span>
-                                <i class="fas fa-arrow-right text-primary"></i>
-                                <span class="fw-bold text-dark">{{ log.unidade_destino.nome }}</span>
-                            </div>
-                            {% if log.responsavel_destino %}
-                            <div class="text-muted mt-1" style="font-size: 0.8rem;">
-                                <i class="fas fa-user-check me-1"></i>{{ log.responsavel_destino }}
-                            </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="text-secondary fst-italic lh-sm ms-1" style="font-size: 0.85rem;">
-                            <i class="fas fa-quote-left text-light me-1"></i>{{ log.motivo }}
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div class="text-center text-muted py-4">
-                        <i class="fas fa-box-open fs-3 mb-2 opacity-50"></i>
-                        <p class="mb-0">Este equipamento ainda não possui transferências.</p>
-                    </div>
-                    {% endfor %}
-                </div>
 
+            <div class="card-body">
+                <div class="tab-content" id="historicoTabsContent">
+                    
+                    <div class="tab-pane fade show active" id="movimentacao" role="tabpanel">
+                        <div class="card-body pt-0">
+                
+                            <div class="timeline-compact">
+                                {% for log in historico_transferencias %}
+                                <div class="timeline-item-compact">
+                                    <div class="timeline-dot"></div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="small text-muted fw-semibold" style="font-size: 0.8rem;">
+                                            <i class="fa fa-calendar-alt me-1"></i>{{ log.data_transferencia|date:"d/m/Y H:i" }}
+                                        </span>
+                                        <small class="text-muted" style="font-size: 0.8rem;">
+                                            <i class="fas fa-user-edit me-1"></i>{{ log.usuario.get_full_name|default:log.usuario.username }}
+                                        </small>
+                                    </div>
+                                    
+                                    <div class="bg-light border rounded p-2 mb-1 shadow-sm">
+                                        <div class="d-flex align-items-center gap-2 flex-wrap" style="font-size: 0.9rem;">
+                                            <span class="text-secondary">{{ log.unidade_origem.nome|default:"Estoque" }}</span>
+                                            <i class="fas fa-arrow-right text-primary"></i>
+                                            <span class="fw-bold text-dark">{{ log.unidade_destino.nome }}</span>
+                                        </div>
+                                        {% if log.responsavel_destino %}
+                                        <div class="text-muted mt-1" style="font-size: 0.8rem;">
+                                            <i class="fas fa-user-check me-1"></i>{{ log.responsavel_destino }}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="text-secondary fst-italic lh-sm ms-1" style="font-size: 0.85rem;">
+                                        <i class="fas fa-quote-left text-light me-1"></i>{{ log.motivo }}
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div class="text-center text-muted py-4">
+                                    <i class="fas fa-box-open fs-3 mb-2 opacity-50"></i>
+                                    <p class="mb-0">Este equipamento ainda não possui transferências.</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="manutencao" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+                            <h6 class="fw-bold mb-0 text-secondary">Histórico de Reparos</h6>
+                            <span class="badge bg-light text-success border">Total: R$ {{ total_gasto|floatformat:2 }}</span>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover border-top">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Tipo</th>
+                                        <th>Descrição / Prestador</th>
+                                        <th class="text-end">Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for m in equipamento.manutencoes.all %}
+                                    <tr>
+                                        <td class="small">{{ m.data_manutencao|date:"d/m/Y" }}</td>
+                                        <td>
+                                            <span class="badge {% if m.tipo == 'Preventiva' %}bg-info-subtle text-info{% else %}bg-danger-subtle text-danger{% endif %}" style="font-size: 0.7rem;">
+                                                {{ m.tipo }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="fw-semibold small">{{ m.descricao }}</div>
+                                            <div class="text-muted" style="font-size: 0.75rem;">{{ m.prestador }}</div>
+                                        </td>
+                                        <td class="text-end fw-bold text-dark small">R$ {{ m.valor|floatformat:2 }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted py-4 small">Nenhuma manutenção realizada.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-3 text-end">
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalManutencao">
+                                <i class="fas fa-plus me-1"></i>Registrar Manutenção
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalManutencao" tabindex="-1" aria-labelledby="modalManutencaoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalManutencaoLabel fw-bold"><i class="fas fa-tools me-2"></i>Nova Manutenção</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'control:registrar_manutencao' equipamento.pk %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Data da Manutenção</label>
+                            {{ form_manutencao.data_manutencao }}
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Tipo</label>
+                            {{ form_manutencao.tipo }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Prestador de Serviço</label>
+                            {{ form_manutencao.prestador }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold">Descrição do Serviço</label>
+                            {{ form_manutencao.descricao }}
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Valor (R$)</label>
+                            {{ form_manutencao.valor }}
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Próxima Revisão</label>
+                            {{ form_manutencao.proxima_manutencao }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-sm btn-primary px-4">Salvar Registro</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

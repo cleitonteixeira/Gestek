@@ -12,8 +12,6 @@
 .m-negative {
   margin-right: -2rem !important;
 }
-
-* CSS para compactar a linha do tempo e colar o ponto na linha */
 .timeline-compact {
     border-left: 2px solid #e9ecef;
     padding-left: 1rem;
@@ -36,26 +34,16 @@
     background-color: #0d6efd; /* Cor azul do Bootstrap */
     border: 2px solid #fff;
 }
-
-/* =========================================
-   SOBRESCREVENDO PADRÕES DO BOOTSTRAP
-   ========================================= */
-
-/* 1. Cards mais modernos (caso prefira fazer via CSS em vez do HTML) */
 .card {
     border: none !important;
     border-radius: 12px !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
 }
-
-/* 2. Soft Badges (Corrige o contraste e deixa o visual Premium) */
 .badge {
     font-weight: 500;
     padding: 0.55em 0.9em;
     letter-spacing: 0.3px;
 }
-
-/* Ocioso (Amarelo) */
 .badge-warning, .bg-warning {
     background-color: #fffbeb !important;
     color: #b45309 !important; /* Texto escuro em fundo claro */
@@ -200,4 +188,20 @@ body {
     background-color: #ffffff !important;
     border-color: #3b82f6 !important;
     box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25) !important;
+}
+.nav-tabs .nav-link {
+    border: none;
+    color: #64748b;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link.active {
+    color: #0d6efd !important;
+    background-color: transparent !important;
+    border-bottom: 2px solid #0d6efd !important;
+}
+
+.nav-tabs .nav-link:hover:not(.active) {
+    border-bottom: 2px solid #e2e8f0;
 }

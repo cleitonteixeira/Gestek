@@ -1,5 +1,5 @@
 from django import forms
-from .models import ClasseEquipamento, Equipamento, Unidade
+from .models import ClasseEquipamento, Equipamento, Manutencao, Unidade
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 
@@ -118,3 +118,16 @@ class LoginForm(forms.Form):
         if not user:
             raise forms.ValidationError("Nome de usuário ou senha inválidos.")
         return cleaned_data
+    
+class ManutencaoForm(forms.ModelForm):
+    class Meta:
+        model = Manutencao
+        fields = ['data_manutencao', 'tipo', 'descricao', 'prestador', 'valor', 'proxima_manutencao']
+        widgets = {
+            'data_manutencao': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'proxima_manutencao': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'tipo': forms.Select(attrs={'class': 'form-select'}),
+            'descricao': forms.Textarea(attrs={'class': 'form-control', 'rows': '3', 'placeholder': 'O que foi feito?'}),
+            'prestador': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome da empresa ou técnico'}),
+            'valor': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+        }

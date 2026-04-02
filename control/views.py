@@ -4,11 +4,11 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash, logout, authenticate, login
 from django.core.paginator import Paginator
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Sum
 
 import openpyxl
 
-from .forms import EquipamentoForm, TransferenciaEquipamentoForm, UnidadeForm, LoginForm
+from .forms import EquipamentoForm, ManutencaoForm, TransferenciaEquipamentoForm, UnidadeForm, LoginForm
 
 from .models import Equipamento, HistoricoTransferencia, TipoEquipamento, Unidade
 
@@ -195,12 +195,39 @@ def transferir_equipamento(request, pk):
     return render(request, 'pages/equipamento_transfer.html', {'form': form, 'equipamento': equipamento})
 
 def detalhes_equipamento(request, pk):
-    equipamento = get_object_or_404(Equipamento, pk=pk)
+    equipamento = get_object_or_404(
+        Equipamento.objects.prefetch_related('manutencoes'), 
+        pk=pk
+    )
+    form_manutencao = ManutencaoForm()
     historico_transferencias = HistoricoTransferencia.objects.filter(equipamento=equipamento).select_related('unidade_origem', 'unidade_destino', 'usuario')[:3]
-    return render(request, 'pages/equipamento_detail.html', {'equipamento': equipamento, 'historico_transferencias': historico_transferencias})
+    total_gasto = equipamento.manutencoes.aggregate(Sum('valor'))['valor__sum'] or 0
+    custo_total_manutencao = equipamento.manutencoes.aggregate(Sum('valor'))['valor__sum'] or 0
+    custo_total_ativo = equipamento.valor + custo_total_manutencao
+    return render(request, 'pages/equipamento_detail.html', {
+        'equipamento': equipamento,
+        'historico_transferencias': historico_transferencias,
+        'custo_total_manutencao': custo_total_manutencao,
+        'custo_total_ativo': custo_total_ativo,
+        'total_gasto': total_gasto,
+        'form_manutencao': form_manutencao,
+    })
 
 def load_tipos(request):
     classe_id = request.GET.get('classe_id')
     tipos = TipoEquipamento.objects.filter(classe_id=classe_id).order_by('nome')
     return JsonResponse(list(tipos.values('id', 'nome')), safe=False)
 
+def registrar_manutencao(request, pk):
+    equipamento = get_object_or_404(Equipamento, pk=pk)
+    if request.method == 'POST':
+        form = ManutencaoForm(request.POST)
+        if form.is_valid():
+            manutencao = form.save(commit=False)
+            manutencao.equipamento = equipamento
+            manutencao.save()
+            messages.success(request, "Manutenção registrada com sucesso!")
+        else:
+            messages.error(request, "Erro ao registrar manutenção. Verifique os dados.")
+    
+    return redirect('control:detalhes_equipamento', pk=pk)
