@@ -6,92 +6,94 @@
         <div class="col-md-12 card p-4 shadow-sm">
             <h3 class="mb-4 border-bottom pb-2">Novo Equipamento</h3>
             
-            <form method="post" class="row g-3">
+            <form method="post" class="needs-validation" novalidate>
                 {% csrf_token %}
-                <div class="col-12">
-                    <div class="form-floating mb-3">
-                        {{ form.nome }}
-                        <label for="{{ form.nome.id_for_label }}">{{ form.nome.label }}</label>
-                        {% if form.nome.errors %}
-                            <div class="text-danger small mt-1">{{ form.nome.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="form-floating mb-3">
-                        {{ form.classe }}
-                        <label for="{{ form.classe.id_for_label }}">{{ form.classe.label }}</label>
-                        {% if form.classe.errors %}
-                            <div class="text-danger small mt-1">{{ form.classe.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="form-floating mb-3">
-                        {{ form.tipo }}
-                        <label for="{{ form.tipo.id_for_label }}">{{ form.tipo.label }}</label>
-                        {% if form.tipo.errors %}
-                            <div class="text-danger small mt-1">{{ form.tipo.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="form-floating mb-3">
-                        {{ form.status }}
-                        <label for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
-                        {% if form.status.errors %}
-                            <div class="text-danger small mt-1">{{ form.status.errors }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="col-12 col-md-3">
-                    <div class="input-group mb-3">
-                        <span class="input-group-text bg-light text-muted fw-bold">R$</span>
-                        
-                        <div class="form-floating {% if form.valor.errors %}is-invalid{% endif %}">
-                            {{ form.valor }}
-                            <label for="{{ form.valor.id_for_label }}">{{ form.valor.label }}</label>
-                        </div>
-
-                        {% if form.valor.errors %}
-                            <div class="invalid-feedback d-block mt-1">
-                                {{ form.valor.errors|first }}
+                
+                <div class="mb-5">
+                    <h6 class="text-primary fw-bold mb-3">
+                        <i class="fas fa-tag me-2"></i>1. Identificação do Equipamento
+                    </h6>
+                    <div class="row g-3 p-3 bg-light rounded-3 border">
+                        <div class="col-12">
+                            <div class="form-floating">
+                                {{ form.nome }}
+                                <label for="{{ form.nome.id_for_label }}">Nome do Equipamento</label>
                             </div>
-                        {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.classe }}
+                                <label for="{{ form.classe.id_for_label }}">Classe</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.tipo }}
+                                <label for="{{ form.tipo.id_for_label }}">Tipo</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.status }}
+                                <label for="{{ form.status.id_for_label }}">Status Inicial</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-3">
-                    <div class="form-floating mb-3">
-                        {{ form.unidade }}
-                        <label for="{{ form.unidade.id_for_label }}">{{ form.unidade.label }}</label>
-                        {% if form.unidade.errors %}
-                            <div class="text-danger small mt-1">{{ form.unidade.errors }}</div>
-                        {% endif %}
+
+                <div class="mb-5">
+                    <h6 class="text-primary fw-bold mb-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>2. Localização e Responsabilidade
+                    </h6>
+                    <div class="row g-3 p-3 bg-light rounded-3 border">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.unidade }}
+                                <label for="{{ form.unidade.id_for_label }}">Unidade Destino</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.responsavel }}
+                                <label for="{{ form.responsavel.id_for_label }}">Responsável Direto</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-6">
-                    <div class="form-floating mb-3">
-                        {{ form.responsavel }}
-                        <label for="{{ form.responsavel.id_for_label }}">{{ form.responsavel.label }}</label>
-                        {% if form.responsavel.errors %}
-                            <div class="text-danger small mt-1">{{ form.responsavel.errors }}</div>
-                        {% endif %}
+
+                <div class="mb-4">
+                    <h6 class="text-primary fw-bold mb-3">
+                        <i class="fas fa-file-invoice-dollar me-2"></i>3. Detalhes Técnicos e Financeiros
+                    </h6>
+                    <div class="row g-3 p-3 bg-light rounded-3 border">
+                        <div class="col-md-6">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-white border-end-0">R$</span>
+                                <div class="form-floating flex-grow-1">
+                                    {{ form.valor }}
+                                    <label for="{{ form.valor.id_for_label }}">Valor de Compra</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-12">
-                    <div class="form-check mb-1">
+                <div class="d-flex align-items-center justify-content-between bg-light p-3 rounded-3 mb-4">
+                    <div>
+                        <h6 class="mb-0 fw-bold">Disponibilidade do Equipamento</h6>
+                        <p class="text-muted small mb-0">Equipamentos inativos não aparecem em novas transferências.</p>
+                    </div>
+                    <div class="form-check form-switch form-check-reverse">
                         {{ form.ativo }}
-                        <label class="form-check-label fw-bold" for="{{ form.ativo.id_for_label }}">
-                            {{ form.ativo.label }}
+                        <label class="form-check-label fw-bold me-2" for="{{ form.ativo.id_for_label }}">
+                            Ativo
                         </label>
-                        {% if form.ativo.errors %}
-                            <div class="text-danger small">{{ form.ativo.errors }}</div>
-                        {% endif %}
                     </div>
                 </div>
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">Salvar Equipamento</button>
-                    <a href="{% url 'control:equipamentos' %}" class="btn btn-outline-secondary">Cancelar</a>
+                <div class="d-flex justify-content-end gap-2 mt-5 border-top pt-4">
+                    <a href="{% url 'control:equipamentos' %}" class="btn btn-light px-4 border">Cancelar</a>
+                    <button type="submit" class="btn btn-primary px-5 shadow-sm">
+                        <i class="fas fa-check-circle me-2"></i>Cadastrar Equipamento
+                    </button>
                 </div>
             </form>
         </div>
@@ -157,4 +159,16 @@
             });
     });
 </script>
+<style>
+    .form-check-input:checked {
+        background-color: #198754; /* Cor verde para "Ativo" */
+        border-color: #198754;
+    }
+    .form-floating > .form-control:focus, .form-floating > .form-select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+    }
+    .x-small { font-size: 0.75rem; }
+    .uppercase { text-transform: uppercase; letter-spacing: 1px; }
+</style>
 {% endblock %}

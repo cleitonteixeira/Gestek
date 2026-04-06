@@ -205,3 +205,24 @@ body {
 .nav-tabs .nav-link:hover:not(.active) {
     border-bottom: 2px solid #e2e8f0;
 }
+/* Suaviza os campos de formulário */
+.form-floating > .form-control, 
+.form-floating > .form-select {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+/* Background suave para as seções */
+.bg-light {
+    background-color: #fcfcfd !important;
+    border: 1px solid #f1f3f5 !important;
+}
+
+/* Ajuste para o Input Group com Floating Label */
+.input-group > .form-floating {
+    flex: 1 1 auto;
+}
+.input-group-text {
+    border-radius: 8px 0 0 8px !important;
+    border-color: #dee2e6;
+}

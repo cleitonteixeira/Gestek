@@ -153,6 +153,7 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>Data</th>
+                                        <th>Unidade</th>
                                         <th>Tipo</th>
                                         <th>Descrição / Prestador</th>
                                         <th class="text-end">Valor</th>
@@ -162,6 +163,9 @@
                                     {% for m in equipamento.manutencoes.all %}
                                     <tr>
                                         <td class="small">{{ m.data_manutencao|date:"d/m/Y" }}</td>
+                                        <td>
+                                            <div class="fw-semibold">{{ m.unidade_origem.codigo|unlocalize }}</div>
+                                        </td>
                                         <td>
                                             <span class="badge {% if m.tipo == 'Preventiva' %}bg-info-subtle text-info{% else %}bg-danger-subtle text-danger{% endif %}" style="font-size: 0.7rem;">
                                                 {{ m.tipo }}

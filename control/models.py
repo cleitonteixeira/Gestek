@@ -117,6 +117,7 @@ class Manutencao(Base):
     ]
 
     equipamento = models.ForeignKey(Equipamento, on_delete=models.CASCADE, related_name='manutencoes')
+    unidade_origem = models.ForeignKey('Unidade', on_delete=models.SET_NULL, null=True, blank=True)
     data_manutencao = models.DateField("Data")
     tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
     descricao = models.TextField("O que foi feito")
@@ -126,7 +127,14 @@ class Manutencao(Base):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Concluída')
 
     class Meta:
+        verbose_name = "Manutenção"
+        verbose_name_plural = "Manutenções"
         ordering = ['-data_manutencao']
 
     def __str__(self):
         return f"{self.equipamento.nome} - {self.data_manutencao}"
+    
+    def save(self, *args, **kwargs):
+        if not self.pk and not self.unidade_origem:
+            self.unidade_origem = self.equipamento.unidade
+        super().save(*args, **kwargs)

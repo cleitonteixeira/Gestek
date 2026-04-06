@@ -74,7 +74,7 @@ class EquipamentoForm(forms.ModelForm):
             }),
             'responsavel': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: João da Silva'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
-            'ativo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'ativo': forms.CheckboxInput(attrs={'class': 'form-check-input', 'role': 'switch'}),
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
