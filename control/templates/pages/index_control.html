@@ -1,4 +1,5 @@
 {% extends "global/base.html" %}
+{% load l10n %}
 {% block title %}Control | {% endblock title %}
 {% block sidebar %}
     {% include "partials/menu.html" %}
@@ -31,37 +32,101 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
     {% block sub_content %}
-    <div class="card mb-3 col-12 col-md-4">
-        <div class="card-body">
-            <h5 class="card-title">Visão Geral</h5>
-            <ol class="list-group">
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">Total de Equipamentos</div>
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-primary text-white">
+                    <div class="card-body">
+                        <h6 class="small text-uppercase opacity-75">Patrimônio Total</h6>
+                        <h3 class="fw-bold">R$ {{ counts.valor_total|floatformat:2 }}</h3>
+                        <i class="bi bi-box-seam position-absolute top-50 end-0 translate-middle-y me-3 fs-1 opacity-25"></i>
                     </div>
-                    <span class="badge bg-primary">{{ counts.total }}</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div>Em Uso</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-danger text-white">
+                    <div class="card-body">
+                        <h6 class="small text-uppercase opacity-75">Gasto em Manutenção</h6>
+                        <h3 class="fw-bold">R$ {{ total_geral|floatformat:2 }}</h3>
+                        <i class="bi bi-tools position-absolute top-50 end-0 translate-middle-y me-3 fs-1 opacity-25"></i>
                     </div>
-                    <span class="badge bg-success">{{ counts.em_uso }}</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div>Ociosos</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-primary text-white">
+                    <div class="card-body">
+                        <h6 class="small text-uppercase opacity-75">Disponibilidade</h6>
+                        <h3 class="fw-bold">{{ counts.disponibilidade_percent }}%</h3>
+                        <i class="bi bi-check-circle position-absolute top-50 end-0 translate-middle-y me-3 fs-1 opacity-25"></i>
                     </div>
-                    <span class="badge bg-warning">{{ counts.ociosos }}</span>
+                </div>
+            </div>
+        </div>
 
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div>Em Manutenção</div>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white fw-bold">Custos por Classe de Equipamento</div>
+                    <div class="card-body">
+                        <canvas id="chartClasse" style="max-height: 300px;"></canvas>
                     </div>
-                    <span class="badge bg-danger">{{ counts.manutencao }}</span>
-                </li>
-            </ol>
+                </div>
+            </div>
+            
+            <div class="col-md-5">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white fw-bold">Status dos Equipamentos</div>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between">
+                            <span><i class="bi bi-play-circle text-success me-2"></i>Em Uso</span>
+                            <span class="badge bg-success rounded-pill">{{ counts.em_uso }}</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between">
+                            <span><i class="bi bi-pause-circle text-warning me-2"></i>Ociosos</span>
+                            <span class="badge bg-warning rounded-pill">{{ counts.ociosos }}</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between">
+                            <span><i class="bi bi-exclamation-triangle text-danger me-2"></i>Em Manutenção</span>
+                            <span class="badge bg-danger rounded-pill">{{ counts.manutencao }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('chartClasse').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for item in por_classe %}"{{ item.equipamento__tipo__classe__nome }}",{% endfor %}],
+                datasets: [{
+                    label: 'Custo Total (R$)',
+                    data: [{% for item in por_classe %}{{ item.total_gasto|unlocalize }},{% endfor %}],
+                    backgroundColor: '#0d6efd'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.y !== null) {
+                                    // Formata o número de volta para o padrão brasileiro no visual
+                                    label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
     {% endblock sub_content %}
 {% endblock content %}

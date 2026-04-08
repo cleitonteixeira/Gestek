@@ -10,7 +10,7 @@ import openpyxl
 
 from .forms import EquipamentoForm, ManutencaoForm, TransferenciaEquipamentoForm, UnidadeForm, LoginForm
 
-from .models import Equipamento, HistoricoTransferencia, TipoEquipamento, Unidade
+from .models import Equipamento, HistoricoTransferencia, Manutencao, TipoEquipamento, Unidade
 
 def LoginView(request):
     if request.method == 'POST':
@@ -33,15 +33,39 @@ def LoginView(request):
 
 @login_required
 def home(request):
-    status_counts = Equipamento.objects.aggregate(
-        total=Count('id'),
-        ociosos=Count('id', filter=Q(status='ocioso')),
-        em_uso=Count('id', filter=Q(status='uso')),
-        manutencao=Count('id', filter=Q(status='manutencao'))
-    )
+    qs_equipamentos = Equipamento.objects.filter(ativo=True)
+    
+    counts = {
+        'total': qs_equipamentos.count(),
+        'em_uso': qs_equipamentos.filter(status='uso').count(),
+        'ociosos': qs_equipamentos.filter(status='ocioso').count(),
+        'manutencao': qs_equipamentos.filter(status='manutencao').count(),
+        'valor_total': qs_equipamentos.aggregate(Sum('valor'))['valor__sum'] or 0,
+    }
+
+    # 2. Indicadores de Manutenção
+    total_geral_manutencao = Manutencao.objects.aggregate(total=Sum('valor'))['total'] or 0
+
+    # 3. Dados para o Gráfico: Custo de Manutenção por Classe
+    # Navegamos: Manutencao -> Equipamento -> Tipo -> Classe
+    manutencoes_por_classe = Manutencao.objects.values(
+        'equipamento__tipo__classe__nome'
+    ).annotate(
+        total_gasto=Sum('valor')
+    ).order_by('-total_gasto')
+    for item in manutencoes_por_classe:
+        item['total_gasto'] = float(item['total_gasto'] or 0)
+
+    # 4. Cálculo de Eficiência (Opcional - para o KPI de Disponibilidade)
+    if counts['total'] > 0:
+        counts['disponibilidade_percent'] = round(((counts['total'] - counts['manutencao']) / counts['total']) * 100, 1)
+    else:
+        counts['disponibilidade_percent'] = 0
 
     context = {
-        'counts': status_counts,
+        'counts': counts,
+        'total_geral': total_geral_manutencao,
+        'por_classe': manutencoes_por_classe,
     }
     return render(request, 'pages/index_control.html', context)
 
