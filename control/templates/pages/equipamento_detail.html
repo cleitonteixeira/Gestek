@@ -93,13 +93,11 @@
                     </li>
                 </ul>
             </div>
-
             <div class="card-body">
                 <div class="tab-content" id="historicoTabsContent">
                     
                     <div class="tab-pane fade show active" id="movimentacao" role="tabpanel">
                         <div class="card-body pt-0">
-                
                             <div class="timeline-compact">
                                 {% for log in historico_transferencias %}
                                 <div class="timeline-item-compact">
@@ -113,7 +111,6 @@
                                             <i class="fas fa-user-edit me-1"></i>{{ log.usuario.get_full_name|default:log.usuario.username }}
                                         </small>
                                     </div>
-                                    
                                     <div class="bg-light border rounded p-2 mb-1 shadow-sm">
                                         <div class="d-flex align-items-center gap-2 flex-wrap" style="font-size: 0.9rem;">
                                             <span class="text-secondary">{{ log.unidade_origem.nome|default:"Estoque" }}</span>
@@ -141,13 +138,11 @@
 
                         </div>
                     </div>
-
                     <div class="tab-pane fade" id="manutencao" role="tabpanel">
                         <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
                             <h6 class="fw-bold mb-0 text-secondary">Histórico de Reparos</h6>
                             <span class="badge bg-light text-success border">Total: R$ {{ total_gasto|floatformat:2 }}</span>
                         </div>
-
                         <div class="table-responsive">
                             <table class="table table-sm table-hover border-top">
                                 <thead class="table-light">
@@ -155,7 +150,7 @@
                                         <th>Data</th>
                                         <th>Unidade</th>
                                         <th>Tipo</th>
-                                        <th>Descrição / Prestador</th>
+                                        <th>Prestador</th>
                                         <th class="text-end">Valor</th>
                                     </tr>
                                 </thead>
@@ -164,7 +159,7 @@
                                     <tr>
                                         <td class="small">{{ m.data_manutencao|date:"d/m/Y" }}</td>
                                         <td>
-                                            <div class="fw-semibold">{{ m.unidade_origem.codigo|unlocalize }}</div>
+                                            <div class="small">{{ m.unidade_origem.codigo|unlocalize }}</div>
                                         </td>
                                         <td>
                                             <span class="badge {% if m.tipo == 'Preventiva' %}bg-info-subtle text-info{% else %}bg-danger-subtle text-danger{% endif %}" style="font-size: 0.7rem;">
@@ -172,10 +167,9 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <div class="fw-semibold small">{{ m.descricao }}</div>
                                             <div class="text-muted" style="font-size: 0.75rem;">{{ m.prestador }}</div>
                                         </td>
-                                        <td class="text-end fw-bold text-dark small">R$ {{ m.valor|floatformat:2 }}</td>
+                                        <td class="text-end text-dark small">R$ {{ m.valor|floatformat:2 }}</td>
                                     </tr>
                                     {% empty %}
                                     <tr>

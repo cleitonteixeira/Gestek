@@ -226,3 +226,25 @@ body {
     border-radius: 8px 0 0 8px !important;
     border-color: #dee2e6;
 }
+
+/* Container que fixa os alertas na tela */
+.message-container {
+    position: fixed;
+    top: 20px; /* Distância do topo */
+    right: 20px; /* Fixado à direita */
+    z-index: 9999; /* Garante que fique sobre modais e menus */
+    width: calc(100% - 40px); /* Ocupa a largura total menos as margens no mobile */
+}
+
+/* Ajuste para computadores (telas médias e grandes) */
+@media (min-width: 768px) {
+    .message-container {
+        width: 30%; /* Limita a largura a 30% em computadores */
+    }
+}
+
+/* Ajuste opcional para o espaçamento entre múltiplos alertas */
+.message-container .alert {
+    margin-bottom: 10px;
+    border-left: 5px solid; /* Adiciona um detalhe visual na lateral */
+}
