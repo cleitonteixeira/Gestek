@@ -37,6 +37,9 @@
                     </div>
                     
                     <div class="btn-group shadow-sm">
+                        <a href="{% url 'control:equipamentos' %}" class="btn btn-warning btn-sm border text-secondary" title="Voltar lista de equipamentos">
+                            <i class="fas fa-list-ul"></i>
+                        </a>
                         <a href="{% url 'control:editar_equipamento' equipamento.pk %}" class="btn btn-white btn-sm border text-secondary" title="Editar Cadastro">
                             <i class="fas fa-edit"></i>
                         </a>
